@@ -1,0 +1,30 @@
+<assembly
+	xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+	<id>filemode</id>
+	<formats>
+		<format>war</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<fileSets>
+		<fileSet>
+			<directory>${project.build.directory}/${pom.name}-${project.version}/resources/cf</directory>
+			<outputDirectory>/resources/cf</outputDirectory>
+			<includes>
+				<include>cf-linux64</include>
+			</includes>
+			<fileMode>0755</fileMode>
+		</fileSet>
+		<fileSet>
+			<directory>${project.build.directory}/${pom.name}-${project.version}</directory>
+			<outputDirectory>/</outputDirectory>
+			<includes>
+				<include>*/**</include>
+			</includes>
+			<excludes>
+				<exclude>resources/cf/cf-mac</exclude>
+			</excludes>
+		</fileSet>
+	</fileSets>
+</assembly>
