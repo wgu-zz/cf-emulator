@@ -7,5 +7,6 @@
 <body>
 	<h1>GSS Hackathon</h1>
 	</br>Team GAP
+	</br>${output}
 </body>
 </html>
