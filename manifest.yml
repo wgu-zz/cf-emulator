@@ -1,13 +1,9 @@
 ---
 applications:
  - name: cf-emulator
-   host: cf-emualtor
+   host: cf-emulator
    path: ./target/cf-emulator.war
-   buildpack: https://github.com/cloudfoundry/java-buildpack#v2.6
    domain: cfapps.io
    memory: 256M
    instances: 1
-
-env:
-   CF_TRACE: true
 
