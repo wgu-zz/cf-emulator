@@ -53,12 +53,11 @@
 			<!-- end left -->
 
 			<div id="starttext" class="togglesize startsize hide-when-full">
-				<h4>Learn the first steps of using Docker, such as:</h4>
+				<h4>Learn the first steps of using cf CLI, such as:</h4>
 				<ul>
-					<li>Finding and downloading images</li>
-					<li>Running hello world</li>
-					<li>Committing your changes</li>
-					<li>Pushing an image to the repository</li>
+					<li>Printing help</li>
+					<li>Login to a CF API endpoint</li>
+					<li>Pushing an application</li>
 				</ul>
 
 				<div style="text-align: center">
