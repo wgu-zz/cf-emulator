@@ -9,7 +9,7 @@ html: """
       <p>cf CLI v6 installs with a simple point-and-click, and you no longer need to install Ruby on your system first 
       (or ever). You can use new binaries or new native installers. See 
       <a href="http://docs.run.pivotal.io/devguide/installcf/install-go-cli.html">Install cf CLI Version 6</a>. 
-      </br></br> For this emulator, simple type cf commands without any installation! Now try <code>cf help</code>.</p>
+      </br></br> For this emulator, simply type cf commands without any installation! Now try <code>cf help</code>.</p>
       """
 })
 

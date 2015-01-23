@@ -10,7 +10,7 @@
   q = [];
 
   q.push({
-    html: "<h3>Getting started</h3>\n<p>cf CLI v6 installs with a simple point-and-click, and you no longer need to install Ruby on your system first \n(or ever). You can use new binaries or new native installers. See \n<a href=\"http://docs.run.pivotal.io/devguide/installcf/install-go-cli.html\">Install cf CLI Version 6</a>. \n</br></br> For this emulator, simple type cf commands without any installation! Now try <code>cf help</code>.</p>"
+    html: "<h3>Getting started</h3>\n<p>cf CLI v6 installs with a simple point-and-click, and you no longer need to install Ruby on your system first \n(or ever). You can use new binaries or new native installers. See \n<a href=\"http://docs.run.pivotal.io/devguide/installcf/install-go-cli.html\">Install cf CLI Version 6</a>. \n</br></br> For this emulator, simply type cf commands without any installation! Now try <code>cf help</code>.</p>"
   });
 
   q.push({
