@@ -9,7 +9,7 @@ html: """
       <p>cf CLI v6 installs with a simple point-and-click, and you no longer need to install Ruby on your system first 
       (or ever). You can use new binaries or new native installers. See 
       <a href="http://docs.run.pivotal.io/devguide/installcf/install-go-cli.html">Install cf CLI Version 6</a>. 
-      </br></br> For this emulator, simply type cf commands without any installation! Now try <code>cf help</code>.</p>
+      </br></br> For this emulator, simple type cf commands without any installation! Now try <code>cf help</code>.</p>
       """
 })
 
@@ -18,7 +18,85 @@ html: """
       <h3>Login</h3>
       <p>The <code>login</code> command in the cf CLI v6 has expanded functionality. In addition to your username and 
       password, you can provide a target API endpoint, organization, and space. If not specified on the command line, 
-      the cf CLI prompts for:</br></br><li><strong>API endpoint</strong>: This is <code>api.run.pivotal.io</code></p>
+      the cf CLI prompts for:</br></br><li><strong>API endpoint</strong>: This is <code>api.run.pivotal.io</code>
+	  <li><strong>Username</strong>: Your username.</li>
+	  <li><strong>Password</strong>: Your password.</li>
+	  <li><strong>Org</strong>: The organization where you want to deploy your application.</li>
+	  <li><strong>Space</strong>: The space in the organization where you want to deploy your application.</li></p>
+	  <p>If you have only one organization and one space, you can omit them because <code>cf login</code> targets them automatically. Usage:</p>
+	  <pre class="terminal">
+	  cf login [-a API_URL] [-u USERNAME] [-p PASSWORD] [-o ORG] [-s SPACE]
+	  </pre>
+	  <p>Alternatively, you can write a script to log in and set your target, using the non-interactive <code>cf api</code>, <code>cf auth</code>, and <code>cf target</code> commands.</p>
+	  <p>Upon successful login, the cf CLI v6 saves a <code>config.json</code> file containing your API endpoint, organization, space values, and access token. If you change these settings, the <code>config.json</code> file is updated accordingly.</p>
+	  <p>By default, <code>config.json</code> is located in your <code>~/.cf</code> directory. The new <code>CF_HOME</code> environment variable allows you to locate the <code>config.json</code> file wherever you like.</p>
+	  """
+})
+
+q.push ({
+html: """
+      <h3>Target</h3>
+      <p>The <code>target</code> command in the cf CLI v6 is used to set or view the targeted org or space:</br></br>
+	  <li><strong>Usage</strong>:</li></p>
+	  <pre class="terminal">
+	  cf target [-o ORG] [-s SPACE]
+	  </pre>
+      """
+})
+
+q.push ({
+html: """
+      <h3>Push</h3>
+	 <p>In cf CLI v6, <code>push</code> is simpler to use and faster.</p>
+	 <ul>
+	 <li><code>APP</code>, the name of the application to push, is the only required argument, and the only argument that has no flag. Even <code>APP</code> can be omitted when you provide the application name in a manifest.</li>
+	 <li>Many command line options are now one character long. For example, <code>-n</code> is now the flag for hostname or subdomain, replacing <code>--host</code>.</li>
+	 <li>There is no longer an interactive mode.</li>
+	 <li>You no longer create manifests interactively. See <a href="/devguide/deploy-apps/manifest.html">Deploying with Application Manifests</a>.</li>
+	 <li>You no longer create services with push interactively or in a manifest. See <a href="#user-provided">User-Provided Services</a> to learn about new commands for creating services.</li>
+	 <li>The <code>-m</code> (memory limit) option now requires a unit of measurement: <code>M</code>,<code>MB</code>,<code>G</code>, or <code>GB</code>, in upper case or lower case.</li>
+	 </ul>
+	 <p>The cf CLI v6 has expanded capabilities in the form of four new options.</p>
+	 <ul>
+	 <li><code>-t</code> (timeout) allows you to give your application more time to start, up to 180 seconds.</li>
+	 <li><code>--no-manifest</code> forces the cf CLI to ignore any existing manifest.</li>
+	 <li><code>--no-hostname</code> makes it possible to specify a route with a domain but no hostname.</li>
+	 <li><code>--no-route</code> is suitable for applications which process data while running in the background. These applications, sometimes called &ldquo;workers&rdquo; are bound only to services and should not have routes.</li>
+	 </ul>
+	 <p>Usage:</p>
+	 <pre class="terminal">
+	 cf push APP [-b URL] [-c COMMAND] [-d DOMAIN] [-i NUM_INSTANCES] [-m MEMORY] /
+	 [-n HOST] [-p PATH] [-s STACK] [--no-hostname] [--no-route] [--no-start]
+	 </pre>
+	 <p>Optional arguments include:</p>
+	 <ul>
+	 <li><code>-b</code> &mdash; Custom buildpack URL, for example, <a href="https://github.com/heroku/heroku-buildpack-play.git">https://github.com/heroku/heroku-buildpack-play.git</a> or <a href="https://github.com/heroku/heroku-buildpack-play.git#stable">https://github.com/heroku/heroku-buildpack-play.git#stable</a> to select <code>stable</code> branch</li>
+	 <li><code>-c</code> &mdash; Start command for the application.</li>
+	 <li><code>-d</code> &mdash; Domain, for example, example.com.</li>
+	 <li><code>-f</code> &mdash; replaces <code>--manifest</code></li>
+	 <li><code>-i</code> &mdash; Number of instances of the application to run.</li>
+	 <li><code>-m</code> &mdash; Memory limit, for example, 256, 1G, 1024M, and so on.</li>
+	 <li><code>-n</code> &mdash; Hostname, for example, <code>my-subdomain</code>.</li>
+	 <li><code>-p</code> &mdash; Path to application directory or archive.</li>
+	 <li><code>-s</code> &mdash; Stack to use.</li>
+	 <li><code>-t</code> &mdash; Timeout to start in seconds.</li>
+	 <li><code>--no-hostname</code> &mdash; Map the root domain to this application (NEW).</li>
+	 <li><code>--no-manifest</code> &mdash; Ignore manifests if they exist.</li>
+	 <li><code>--no-route</code> &mdash; Do not map a route to this application (NEW).</li>
+	 <li><code>--no-start</code> &mdash; Do not start the application after pushing.</li>
+	 </ul>
+	 <p class='note'><strong>Note</strong>: The `&ndash;no-route` option also removes existing routes from previous pushes of this app.</p>
+      """
+})
+
+q.push ({
+html: """
+      <h3>Apps</h3>
+      <p>The <code>apps</code> command in the cf CLI v6 is used to list all apps in the target space:</br></br>
+	  <li><strong>Usage</strong>:</li></p>
+	  <pre class="terminal">
+		  cf apps
+	  </pre>
       """
 })
 
