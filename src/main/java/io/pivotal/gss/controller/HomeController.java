@@ -95,7 +95,13 @@ public class HomeController {
 		// }
 		// });
 
-		// result.setResult(output);
+		try {
+			resultHandler.waitFor();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		result.setResult(cmdOutput.toString());
 
 		return result;
 	}
