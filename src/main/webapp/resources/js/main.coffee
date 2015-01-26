@@ -24,7 +24,7 @@ html: """
 	  <li><strong>Org</strong>: The organization where you want to deploy your application.</li>
 	  <li><strong>Space</strong>: The space in the organization where you want to deploy your application.</li></p>
 	  <p>If you have only one organization and one space, you can omit them because <code>cf login</code> targets them automatically. Usage:</p>
-	  <pre class="terminal">
+	  <pre id="pre1" class="terminal1">
 	  cf login [-a API_URL] [-u USERNAME] [-p PASSWORD] [-o ORG] [-s SPACE]
 	  </pre>
 	  <p>Alternatively, you can write a script to log in and set your target, using the non-interactive <code>cf api</code>, <code>cf auth</code>, and <code>cf target</code> commands.</p>
@@ -38,7 +38,7 @@ html: """
       <h3>Target</h3>
       <p>The <code>target</code> command in the cf CLI v6 is used to set or view the targeted org or space:</br></br>
 	  <li><strong>Usage</strong>:</li></p>
-	  <pre class="terminal">
+	  <pre id="pre1" class="terminal1">
 	  cf target [-o ORG] [-s SPACE]
 	  </pre>
       """
@@ -64,7 +64,7 @@ html: """
 	 <li><code>--no-route</code> is suitable for applications which process data while running in the background. These applications, sometimes called &ldquo;workers&rdquo; are bound only to services and should not have routes.</li>
 	 </ul>
 	 <p>Usage:</p>
-	 <pre class="terminal">
+	 <pre id="pre1" class="terminal1">
 	 cf push APP [-b URL] [-c COMMAND] [-d DOMAIN] [-i NUM_INSTANCES] [-m MEMORY] /
 	 [-n HOST] [-p PATH] [-s STACK] [--no-hostname] [--no-route] [--no-start]
 	 </pre>
@@ -94,8 +94,7 @@ html: """
       <h3>Apps</h3>
       <p>The <code>apps</code> command in the cf CLI v6 is used to list all apps in the target space:</br></br>
 	  <li><strong>Usage</strong>:</li></p>
-	  <pre class="terminal">
-		  cf apps
+	  <pre id="pre1" class="terminal1">cf apps
 	  </pre>
       """
 })

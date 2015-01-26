@@ -443,3 +443,13 @@
 	margin-bottom: 10px;
 	font-weight: bold;
 }
+
+.terminal1 {
+  background-color: #3a3a3a;
+  border: 0;
+  color: #fefefe;
+}
+
+#pre1 {
+	color: #fefefe;
+}
