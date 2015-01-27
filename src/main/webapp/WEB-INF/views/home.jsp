@@ -92,6 +92,10 @@
 	<script type="text/javascript"
 		src="<c:url value="/resources/lib/js/sugar-1.3.9.min.js" />"></script>
 	<script type="text/javascript"
+		src="<c:url value="/resources/lib/js/stomp.js" />"></script>
+	<script type="text/javascript"
+		src="<c:url value="/resources/lib/js/sockjs-0.3.4.js" />"></script>
+	<script type="text/javascript"
 		src="<c:url value="/resources/js/terminal.js" />"></script>
 	<script type="text/javascript"
 		src="<c:url value="/resources/js/main.js" />"></script>

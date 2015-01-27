@@ -173,21 +173,13 @@
       cf program
      */
     return cf = function(term, inputs) {
-      var callback, echo, insert, poll;
+      var callback, echo, insert;
       echo = term.echo;
       insert = term.insert;
       callback = function() {
         return this.finishedCallback(inputs);
       };
-      poll = function() {
-        return $.ajax({
-          url: "run?command=" + inputs,
-          success: function(data) {
-            return echo(data);
-          }
-        });
-      };
-      poll();
+      stompClient.send('/app/run', {}, JSON.stringify(""));
     };
   })();
 

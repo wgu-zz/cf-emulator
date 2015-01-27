@@ -1,11 +1,12 @@
 package io.pivotal.gss.controller;
 
+import io.pivotal.gss.WebSocketPumpStreamHandler;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,21 +22,20 @@ import org.apache.commons.exec.Executor;
 import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.lang3.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.MessageHeaders;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.request.async.DeferredResult;
 
 @Controller
 public class HomeController {
 
-	private static final String NEW_LINE = System.getProperty("line.separator");
-
 	private static String contextRoot;
 	private static String runCf;
 
-	private Map<String, Process> cfProcesses;
+	@Autowired
+	private SimpMessagingTemplate outputSender;
 
 	@Autowired
 	private ServletContext servletContext;
@@ -46,7 +46,6 @@ public class HomeController {
 		String cfBinary = SystemUtils.IS_OS_LINUX ? "cf-linux64" : "cf-mac";
 		runCf = contextRoot + File.separator + "resources" + File.separator
 				+ "cf" + File.separator + cfBinary;
-		cfProcesses = Collections.emptyMap();
 	}
 
 	@RequestMapping(value = "/")
@@ -55,27 +54,30 @@ public class HomeController {
 		return "home";
 	}
 
-	@RequestMapping(value = "/run")
-	@ResponseBody
-	public DeferredResult<String> run(
-			@RequestParam(required = false) final String[] arguments,
-			HttpSession session) throws IOException {
+	@MessageMapping("/run")
+	public void run(String arguments, MessageHeaders messageHeaders)
+			throws IOException {
 
-		final String sessionId = session.getId();
+		Map<String, String> m = messageHeaders.get("simpSessionAttributes",
+				Map.class);
 
-		DeferredResult<String> result = new DeferredResult<String>(null,
-				Collections.emptyList());
+		final String sessionId = m.get("HTTPSESSIONID");
 
-		String cfHome = contextRoot + File.separator + sessionId;
+		// final String sessionId = session.getId();
+
+		// String cfHome = contextRoot + File.separator + sessionId;
+		String cfHome = contextRoot;
 		// Maybe more environment variables parsed from the inputs
 		Map<String, String> env = new HashMap<String, String>();
 		env.put("CF_HOME", cfHome);
 
 		CommandLine cmdLine = new CommandLine(runCf);
-		cmdLine.addArguments(arguments);
+		// cmdLine.addArgument("login");
 		DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
 		Executor executor = new DefaultExecutor();
 
+		// TODO with WebSocketPumpStreamHandler we actually do not need an
+		// output stream anymore, command output will be directly sent out
 		ByteArrayOutputStream cmdOutput = new ByteArrayOutputStream();
 		PipedOutputStream pos = new PipedOutputStream();
 		PipedInputStream pis = new PipedInputStream(pos);
@@ -83,27 +85,12 @@ public class HomeController {
 		// the threads. But haven't got a better way to do this in apache
 		// commons exec lib
 		System.setIn(pis);
-		executor.setStreamHandler(new PumpStreamHandler(cmdOutput, cmdOutput,
-				System.in));
+		outputSender.setDefaultDestination("/broker/out");
+		executor.setStreamHandler(new WebSocketPumpStreamHandler<String>(
+				cmdOutput, cmdOutput, System.in, outputSender));
 		executor.execute(cmdLine, env, resultHandler);
 
-		// cfProcesses.put(sessionId, process);
-		//
-		// result.onCompletion(new Runnable() {
-		// public void run() {
-		// cfProcesses.remove(sessionId);
-		// }
-		// });
-
-		try {
-			resultHandler.waitFor();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		result.setResult(cmdOutput.toString());
-
-		return result;
+		System.out.println("*** executed ***");
 	}
 
 	// TODO remove the test code

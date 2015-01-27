@@ -5,7 +5,7 @@
  */
 
 (function() {
-  var EVENT_TYPES, buildfunction, current_question, currentquestion, drawStatusMarker, err, f, logEvent, next, progressIndicator, q, question, questionNumber, questions, results, statusMarker, _i, _len;
+  var EVENT_TYPES, buildfunction, current_question, currentquestion, drawStatusMarker, err, f, logEvent, next, progressIndicator, q, question, questionNumber, questions, results, socket, statusMarker, _i, _len;
 
   q = [];
 
@@ -254,5 +254,15 @@
   }
 
   $('#results').hide();
+
+  socket = new SockJS('/cf-emulator/socket');
+
+  this.stompClient = Stomp.over(socket);
+
+  stompClient.connect({}, function(frame) {
+    return stompClient.subscribe('/broker/out', function(output) {
+      return this.webterm.insert(JSON.parse(output.body));
+    });
+  });
 
 }).call(this);

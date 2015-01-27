@@ -321,3 +321,9 @@ else
 
 $('#results').hide()
 
+socket = new SockJS '/cf-emulator/socket'
+@stompClient = Stomp.over socket
+stompClient.connect {}, (frame) ->
+  stompClient.subscribe '/broker/out', (output) ->
+    this.webterm.insert JSON.parse output.body
+

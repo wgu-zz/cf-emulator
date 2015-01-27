@@ -178,13 +178,14 @@ do @myTerminal = ->
     callback = () -> @finishedCallback(inputs)
     
     # execute actual cf commands and get output here
-    poll = ->
-    	$.ajax
-    		url: "run?command=" + inputs
-    		success: (data) ->
-    			echo data
-    		#complete: poll
-    poll()
+#    poll = ->
+#    	$.ajax
+#    		url: "run?command=" + inputs
+#    		success: (data) ->
+#    			echo data
+#    		#complete: poll
+#    poll()
+    stompClient.send '/app/run', {}, JSON.stringify "a"
     return
 
 return this
