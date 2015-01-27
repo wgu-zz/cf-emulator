@@ -1,10 +1,12 @@
 package io.pivotal.gss.controller;
 
+import io.pivotal.gss.UserProperties;
 import io.pivotal.gss.WebSocketPumpStreamHandler;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.util.HashMap;
@@ -18,6 +20,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecuteResultHandler;
 import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.exec.Executor;
 import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.lang3.SystemUtils;
@@ -33,6 +36,7 @@ public class HomeController {
 
 	private static String contextRoot;
 	private static String runCf;
+	private static Map<String, UserProperties> userSessions = new HashMap<String, UserProperties>();
 
 	@Autowired
 	private SimpMessagingTemplate outputSender;
@@ -55,26 +59,39 @@ public class HomeController {
 	}
 
 	@MessageMapping("/run")
-	public void run(String arguments, MessageHeaders messageHeaders)
+	@SuppressWarnings("unchecked")
+	public void run(String command, MessageHeaders messageHeaders)
 			throws IOException {
 
-		Map<String, String> m = messageHeaders.get("simpSessionAttributes",
-				Map.class);
+		final Map<String, String> attributes = messageHeaders.get(
+				"simpSessionAttributes", Map.class);
+		final String httpSessionId = attributes.get("HTTPSESSIONID");
+		UserProperties userProperties = userSessions.get(httpSessionId);
+		// Temporary solution... but we can remove the entry when the web socket
+		// connection ends, TODO
+		if (userProperties != null) {
+			if (userProperties.getWatchdog().isWatching()) {
+				OutputStream os = userProperties.getOs();
+				os.write(command.getBytes());
+				os.flush();
+				return;
+			}
+		} else {
+			userProperties = new UserProperties();
+			userSessions.put(httpSessionId, userProperties);
+		}
 
-		final String sessionId = m.get("HTTPSESSIONID");
-
-		// final String sessionId = session.getId();
-
-		// String cfHome = contextRoot + File.separator + sessionId;
-		String cfHome = contextRoot;
+		String cfHome = contextRoot + File.separator + httpSessionId;
 		// Maybe more environment variables parsed from the inputs
 		Map<String, String> env = new HashMap<String, String>();
 		env.put("CF_HOME", cfHome);
 
 		CommandLine cmdLine = new CommandLine(runCf);
-		// cmdLine.addArgument("login");
+		cmdLine.addArgument("login");
 		DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
 		Executor executor = new DefaultExecutor();
+		ExecuteWatchdog watchdog = new ExecuteWatchdog(60000);
+		executor.setWatchdog(watchdog);
 
 		// TODO with WebSocketPumpStreamHandler we actually do not need an
 		// output stream anymore, command output will be directly sent out
@@ -90,6 +107,8 @@ public class HomeController {
 				cmdOutput, cmdOutput, System.in, outputSender));
 		executor.execute(cmdLine, env, resultHandler);
 
+		userProperties.setWatchdog(watchdog);
+		userProperties.setOs(pos);
 		System.out.println("*** executed ***");
 	}
 

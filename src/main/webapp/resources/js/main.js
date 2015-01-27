@@ -255,7 +255,7 @@
 
   $('#results').hide();
 
-  socket = new SockJS('/cf-emulator/socket');
+  socket = new SockJS('/socket:4443');
 
   this.stompClient = Stomp.over(socket);
 
