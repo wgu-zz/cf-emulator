@@ -44,6 +44,8 @@ public class WebSocketPumpStreamHandler<D> implements ExecuteStreamHandler {
 
 	private final MessageSendingOperations<D> outputSender;
 
+	private final UserProperties userProperties;
+
 	/**
 	 * the timeout in ms the implementation waits when stopping the pumper
 	 * threads
@@ -101,10 +103,18 @@ public class WebSocketPumpStreamHandler<D> implements ExecuteStreamHandler {
 	public WebSocketPumpStreamHandler(final OutputStream out,
 			final OutputStream err, final InputStream input,
 			final MessageSendingOperations<D> outputSender) {
+		this(out, err, input, outputSender, null);
+	}
+
+	public WebSocketPumpStreamHandler(final OutputStream out,
+			final OutputStream err, final InputStream input,
+			final MessageSendingOperations<D> outputSender,
+			final UserProperties userProperties) {
 		this.out = out;
 		this.err = err;
 		this.input = input;
 		this.outputSender = outputSender;
+		this.userProperties = userProperties;
 	}
 
 	/**
@@ -298,7 +308,8 @@ public class WebSocketPumpStreamHandler<D> implements ExecuteStreamHandler {
 			final boolean closeWhenExhausted) {
 		// [Change] use WebSocketStreamPumper instead of StreamPumper
 		final Thread result = new Thread(new WebSocketStreamPumper<D>(is, os,
-				closeWhenExhausted, outputSender), "Exec Stream Pumper");
+				closeWhenExhausted, outputSender, userProperties),
+				"Exec Stream Pumper");
 		result.setDaemon(true);
 		return result;
 	}

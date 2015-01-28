@@ -7,6 +7,7 @@ import java.util.Arrays;
 
 import org.apache.commons.exec.util.DebugUtils;
 import org.springframework.messaging.core.MessageSendingOperations;
+import org.springframework.stereotype.Component;
 
 /**
  * Copies all data from an input stream to an output stream.
@@ -15,6 +16,7 @@ import org.springframework.messaging.core.MessageSendingOperations;
  * Changes to the original class will be marked starting [Change]
  *
  */
+@Component
 public class WebSocketStreamPumper<D> implements Runnable {
 
 	/** the default size of the internal buffer for copying the streams */
@@ -36,6 +38,8 @@ public class WebSocketStreamPumper<D> implements Runnable {
 	private final boolean closeWhenExhausted;
 
 	private final MessageSendingOperations<D> outputSender;
+
+	private UserProperties userProperties;
 
 	/**
 	 * Create a new stream pumper.
@@ -95,6 +99,18 @@ public class WebSocketStreamPumper<D> implements Runnable {
 	 */
 	public WebSocketStreamPumper(final InputStream is, final OutputStream os) {
 		this(is, os, false);
+	}
+
+	public WebSocketStreamPumper(InputStream is, OutputStream os,
+			boolean closeWhenExhausted,
+			MessageSendingOperations<D> outputSender,
+			UserProperties userProperties) {
+		this.is = is;
+		this.os = os;
+		this.size = DEFAULT_SIZE;
+		this.closeWhenExhausted = closeWhenExhausted;
+		this.outputSender = outputSender;
+		this.userProperties = userProperties;
 	}
 
 	/**

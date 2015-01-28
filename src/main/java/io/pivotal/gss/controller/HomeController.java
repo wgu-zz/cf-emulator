@@ -106,7 +106,8 @@ public class HomeController {
 		System.setIn(pis);
 		outputSender.setDefaultDestination("/broker/out");
 		executor.setStreamHandler(new WebSocketPumpStreamHandler<String>(
-				cmdOutput, cmdOutput, System.in, outputSender));
+				cmdOutput, cmdOutput, System.in, outputSender, userSessions
+						.get(httpSessionId)));
 		executor.execute(cmdLine, env, resultHandler);
 
 		userProperties.setWatchdog(watchdog);
