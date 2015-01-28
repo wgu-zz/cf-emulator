@@ -1,17 +1,132 @@
 package io.pivotal.gss.controller;
 
+import io.pivotal.gss.UserProperties;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class backTest {
 	public boolean validateCmd(Map<String, String> session)
 	{
-		if(session.containsKey("api") &&  session.containsKey("username") && session.containsKey("passwd") 
-				&& session.containsKey("org") && session.containsKey("space"))
+		if(session.containsKey("api") &&  session.containsKey("username") && session.containsKey("passwd") && session.containsKey("org") && session.containsKey("space"))
 		{
 			return true;
 		}
 		return false;
+	}
+	
+	public String[] parseInputUserproperty(UserProperties session,String[] arguments)
+	{
+		String realArg[] = null;
+		if(arguments != null)
+		{
+			//1)get real real arguments			
+			int argCount = arguments.length;
+			
+			if(argCount == 1)
+			{
+				realArg = new String[1];
+				realArg[0] = arguments[0];
+				//set other para in login cmd
+				if(session.getApi() == null)
+				{
+					//this is username string
+					session.setApi(realArg[0]);
+					realArg[0] = "https://api.run.pivotal.io";
+				}
+				else if(session.getEmail() == null)
+				{
+					//this is username string
+					session.setEmail(realArg[0]);
+					realArg[0] = "fwang@pivotal.io";
+				}
+				else if(session.getPwd() == null)
+				{
+					//this is username string
+					session.setPwd(realArg[0]);
+					realArg[0] = "wang123456";
+				}
+				else if(session.getOrg() == null)
+				{
+					//this is org string
+					//session.setOrg(realArg[0]);
+					//realArg[0] = "gss-apj";
+				}
+				else if(session.getSpace()== null)
+				{
+					//this is space string, just bypass
+					//session.setSpace(realArg[0]);
+					//realArg[0] = "fwang";
+				}
+				return realArg;
+				
+			}
+			else if(argCount > 1)
+			{
+				realArg = new String[argCount-1];				
+			}
+			else
+			{
+				//it is cf cmd with no parameter				
+				return null;
+			}
+				
+			for(int j=1;j<argCount;j++)
+			{
+				realArg[j-1] = arguments[j];
+			}
+			argCount = argCount-2;			
+			int i = 0;
+			if(realArg[i].equals("login") == true)
+			{				
+				for(i=i+1;i<argCount;)
+				{
+					if(realArg[i].equals("-a"))
+					{
+						session.setApi(realArg[i+1]);
+						realArg[i+1] = "https://api.run.pivotal.io";
+					}
+					else if(realArg[i].equals("-u"))
+					{
+						session.setEmail(realArg[i+1]);
+						realArg[i+1] = "fwang@pivotal.io";
+					}	
+					else if(realArg[i].equals("-p"))
+					{
+						session.setPwd(realArg[i+1]);
+						realArg[i+1] = "wang123456";
+					}
+					else if(realArg[i].equals("-o"))
+					{						
+						session.setOrg(realArg[i+1]);
+						realArg[i+1] = "gss-apj";
+					}
+					else if(realArg[i].equals("-s"))
+					{
+						session.setSpace(realArg[i+1]);
+						realArg[i+1] = "fwang";
+					}
+					i = i + 2;
+				}
+			}
+			else if(realArg[i].equals("target"))
+			{	
+			}
+			else if(realArg[i].equals("push"))
+			{
+			}
+			else if(realArg[i].equals("apps"))
+			{
+			}
+			else if(realArg[i].equals("help"))
+			{
+			}					
+		}
+		else
+		{
+			return null;
+		}
+		return realArg;
 	}
 	
 	//public String[] parseInput(HttpSession session, String[] arguments)
@@ -274,7 +389,20 @@ public class backTest {
 		String[] ar81 = {"cf","login","-a","https://api.run.pivotal.io","-u","fwang@pivotal.io","-p","wang123456","-o","org","-s","fwang"};
 		acArgs = parseInput(session,ar81);
 		String[] ar82 = {"cf","apps"};
-		acArgs = parseInput(session,ar82);
+		acArgs = parseInput(session,ar82);		
+		
+		//test case 9
+		session.clear();
+		String ar091 = new String("cf login -p wang123456");
+		String[] ar91 = ar091.split(" ");
+		acArgs = parseInput(session,ar91);
+		String ar092 = new String("api.run.pivotal.io");
+		String[] ar92 = ar092.split(" ");
+		acArgs = parseInput(session,ar92);
+		String ar093 = new String("fwang@pivotal.io");
+		String[] ar93 = ar093.split(" ");
+		acArgs = parseInput(session,ar93);
+		
 		
 		
 //		for(String s:acArgs )

@@ -129,8 +129,17 @@ public class WebSocketStreamPumper<D> implements Runnable {
 				os.write(buf, 0, length);
 				// [Change] send the input stream directly
 				System.out.println(new String(Arrays.copyOf(buf, length)));
-				outputSender.convertAndSend(new String(Arrays.copyOf(buf,
-						length)));
+				
+				//user response string replace
+				String resString = new String(Arrays.copyOf(buf, length));
+				resString.replaceAll("https://api.run.pivotal.io", userProperties.getApi());
+				resString.replaceAll("fwang@pivotal.io", userProperties.getEmail());
+				resString.replaceAll("gss-apj", userProperties.getOrg());
+				resString.replaceAll("fwang", userProperties.getSpace());
+				resString.replaceAll(userProperties.getRunCf(),"cf");				
+				//user response string replace
+				
+				outputSender.convertAndSend(resString);
 			}
 		} catch (final Exception e) {
 			// nothing to do - happens quite often with watchdog

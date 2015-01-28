@@ -74,6 +74,14 @@ public class HomeController {
 		if (userProperties != null) {
 			if (userProperties.getWatchdog().isWatching()) {
 				OutputStream os = userProperties.getOs();
+				/////////////////////////////
+				//store para and add argument
+				String[] commandPara = command.split(" ");
+				backTest bt = new backTest();
+				String[] acArgs = bt.parseInputUserproperty(userProperties,commandPara);
+				String finalCmd = acArgs[0];
+				//store para and add argument
+				/////////////////////////////
 				os.write((command + "\n").getBytes());
 				os.flush();
 				return;
@@ -89,7 +97,16 @@ public class HomeController {
 		env.put("CF_HOME", cfHome);
 
 		CommandLine cmdLine = new CommandLine(runCf);
-		cmdLine.addArgument("login");
+		//cmdLine.addArgument("login");
+		//////////////////////////
+		//store para and add argument
+		userProperties.setRunCf(runCf);
+		String[] commandPara = command.split(" ");
+		backTest bt = new backTest();
+		String[] acArgs = bt.parseInputUserproperty(userProperties,commandPara);
+		cmdLine.addArguments(acArgs);
+		//store para and add argument
+		//////////////////////////
 		DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
 		Executor executor = new DefaultExecutor();
 		ExecuteWatchdog watchdog = new ExecuteWatchdog(60000);
@@ -109,6 +126,8 @@ public class HomeController {
 				cmdOutput, cmdOutput, System.in, outputSender, userSessions
 						.get(httpSessionId)));
 		executor.execute(cmdLine, env, resultHandler);
+		
+		System.out.println(cmdLine);
 
 		userProperties.setWatchdog(watchdog);
 		userProperties.setOs(pos);
