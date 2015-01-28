@@ -321,9 +321,16 @@ else
 
 $('#results').hide()
 
-socket = new SockJS '/cf-emulator/socket'
+String.prototype.endsWith = (suffix) ->
+  this.indexOf(suffix, length - suffix.length) != -1
+
+socket = new SockJS '/socket:4443'
 @stompClient = Stomp.over socket
 stompClient.connect {}, (frame) ->
   stompClient.subscribe '/broker/out', (output) ->
-    this.webterm.insert JSON.parse output.body
+    message = JSON.parse output.body
+    if message.endsWith "> "
+      this.webterm.insert message
+    else
+      this.webterm.echo message
 

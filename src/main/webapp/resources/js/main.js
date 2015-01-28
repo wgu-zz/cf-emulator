@@ -255,13 +255,23 @@
 
   $('#results').hide();
 
+  String.prototype.endsWith = function(suffix) {
+    return this.indexOf(suffix, length - suffix.length) !== -1;
+  };
+
   socket = new SockJS('/socket:4443');
 
   this.stompClient = Stomp.over(socket);
 
   stompClient.connect({}, function(frame) {
     return stompClient.subscribe('/broker/out', function(output) {
-      return this.webterm.insert(JSON.parse(output.body));
+      var message;
+      message = JSON.parse(output.body);
+      if (message.endsWith("> ")) {
+        return this.webterm.insert(message);
+      } else {
+        return this.webterm.echo(message);
+      }
     });
   });
 

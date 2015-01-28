@@ -32,9 +32,13 @@ do @myTerminal = ->
   @interpreter = (input, term) ->
     inputs = input.split(" ")
     command = inputs[0]
+    
+    if input.endsWith "> "
+      value = input.substring((input.indexOf "> ") + 2).trim()
+      cf(term, value)
 
-    if command is "cf"
-      cf(term, inputs)
+    else if command is "cf"
+      cf(term, input)
 
     else if command is "help"
       term.echo help
@@ -171,14 +175,14 @@ do @myTerminal = ->
     cf program
   ###
 
-  cf = (term, inputs) ->
+  cf = (term, input) ->
 
     echo = term.echo
     insert = term.insert
-    callback = () -> @finishedCallback(inputs)
+    callback = () -> @finishedCallback(input)
     
     # execute actual cf commands and get output here
-    stompClient.send '/app/run', {}, JSON.stringify ""
+    stompClient.send '/app/run', {}, JSON.stringify input
     return
 
 return this

@@ -25,11 +25,14 @@
       Base interpreter
      */
     this.interpreter = function(input, term) {
-      var command, inputs;
+      var command, inputs, value;
       inputs = input.split(" ");
       command = inputs[0];
-      if (command === "cf") {
-        cf(term, inputs);
+      if (input.endsWith("> ")) {
+        value = input.substring((input.indexOf("> ")) + 2).trim();
+        cf(term, value);
+      } else if (command === "cf") {
+        cf(term, input);
       } else if (command === "help") {
         term.echo(help);
       } else if (command === "ls") {
@@ -172,14 +175,14 @@
     /*
       cf program
      */
-    return cf = function(term, inputs) {
+    return cf = function(term, input) {
       var callback, echo, insert;
       echo = term.echo;
       insert = term.insert;
       callback = function() {
-        return this.finishedCallback(inputs);
+        return this.finishedCallback(input);
       };
-      stompClient.send('/app/run', {}, JSON.stringify(""));
+      stompClient.send('/app/run', {}, JSON.stringify(input));
     };
   })();
 

@@ -69,10 +69,12 @@ public class HomeController {
 		UserProperties userProperties = userSessions.get(httpSessionId);
 		// Temporary solution... but we can remove the entry when the web socket
 		// connection ends, TODO
+		// Here is a good solution to get use of the http session:
+		// http://stackoverflow.com/questions/17936440/accessing-httpsession-from-httpservletrequest-in-a-web-socket-socketendpoint
 		if (userProperties != null) {
 			if (userProperties.getWatchdog().isWatching()) {
 				OutputStream os = userProperties.getOs();
-				os.write(command.getBytes());
+				os.write((command + "\n").getBytes());
 				os.flush();
 				return;
 			}

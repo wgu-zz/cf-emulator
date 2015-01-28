@@ -114,6 +114,7 @@ public class WebSocketStreamPumper<D> implements Runnable {
 			while ((length = is.read(buf)) > 0) {
 				os.write(buf, 0, length);
 				// [Change] send the input stream directly
+				System.out.println(new String(Arrays.copyOf(buf, length)));
 				outputSender.convertAndSend(new String(Arrays.copyOf(buf,
 						length)));
 			}
