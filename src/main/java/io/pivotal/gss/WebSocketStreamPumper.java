@@ -7,7 +7,6 @@ import java.util.Arrays;
 
 import org.apache.commons.exec.util.DebugUtils;
 import org.springframework.messaging.core.MessageSendingOperations;
-import org.springframework.stereotype.Component;
 
 /**
  * Copies all data from an input stream to an output stream.
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Component;
  * Changes to the original class will be marked starting [Change]
  *
  */
-@Component
 public class WebSocketStreamPumper<D> implements Runnable {
 
 	/** the default size of the internal buffer for copying the streams */
