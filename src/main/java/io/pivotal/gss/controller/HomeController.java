@@ -1,5 +1,6 @@
 package io.pivotal.gss.controller;
 
+import io.pivotal.gss.InputParser;
 import io.pivotal.gss.UserProperties;
 import io.pivotal.gss.WebSocketPumpStreamHandler;
 
@@ -9,6 +10,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -74,15 +76,7 @@ public class HomeController {
 		if (userProperties != null) {
 			if (userProperties.getWatchdog().isWatching()) {
 				OutputStream os = userProperties.getOs();
-				/////////////////////////////
-				//store para and add argument
-				String[] commandPara = command.split(" ");
-				backTest bt = new backTest();
-				String[] acArgs = bt.parseInputUserproperty(userProperties,commandPara);
-				String finalCmd = acArgs[0];
-				//store para and add argument
-				/////////////////////////////
-				os.write((command + "\n").getBytes());
+				os.write(InputParser.parse(command, userProperties).getBytes());
 				os.flush();
 				return;
 			}
@@ -97,19 +91,20 @@ public class HomeController {
 		env.put("CF_HOME", cfHome);
 
 		CommandLine cmdLine = new CommandLine(runCf);
-		//cmdLine.addArgument("login");
-		//////////////////////////
-		//store para and add argument
+		// ////////////////////////
+		// store para and add argument
 		userProperties.setRunCf(runCf);
 		String[] commandPara = command.split(" ");
-		backTest bt = new backTest();
-		String[] acArgs = bt.parseInputUserproperty(userProperties,commandPara);
-		cmdLine.addArguments(acArgs);
-		//store para and add argument
-		//////////////////////////
+		// backTest bt = new backTest();
+		// String[] acArgs = bt
+		// .parseInputUserproperty(userProperties, commandPara);
+		cmdLine.addArguments(Arrays.copyOfRange(commandPara, 1,
+				commandPara.length));
+		// store para and add argument
+		// ////////////////////////
 		DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
 		Executor executor = new DefaultExecutor();
-		ExecuteWatchdog watchdog = new ExecuteWatchdog(60000);
+		ExecuteWatchdog watchdog = new ExecuteWatchdog(120000);
 		executor.setWatchdog(watchdog);
 
 		// TODO with WebSocketPumpStreamHandler we actually do not need an
@@ -126,8 +121,8 @@ public class HomeController {
 				cmdOutput, cmdOutput, System.in, outputSender, userSessions
 						.get(httpSessionId)));
 		executor.execute(cmdLine, env, resultHandler);
-		
-		System.out.println(cmdLine);
+
+		System.out.println(cmdLine.toString());
 
 		userProperties.setWatchdog(watchdog);
 		userProperties.setOs(pos);

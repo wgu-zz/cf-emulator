@@ -33,9 +33,8 @@ do @myTerminal = ->
     inputs = input.split(" ")
     command = inputs[0]
     
-    if input.endsWith "> "
-      value = input.substring((input.indexOf "> ") + 2).trim()
-      cf(term, value)
+    if input.indexOf(">") > 0
+      cf(term, input)
 
     else if command is "cf"
       cf(term, input)

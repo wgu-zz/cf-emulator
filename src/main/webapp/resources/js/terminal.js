@@ -25,12 +25,11 @@
       Base interpreter
      */
     this.interpreter = function(input, term) {
-      var command, inputs, value;
+      var command, inputs;
       inputs = input.split(" ");
       command = inputs[0];
-      if (input.endsWith("> ")) {
-        value = input.substring((input.indexOf("> ")) + 2).trim();
-        cf(term, value);
+      if (input.indexOf(">") > 0) {
+        cf(term, input);
       } else if (command === "cf") {
         cf(term, input);
       } else if (command === "help") {

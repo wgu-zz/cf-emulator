@@ -11,8 +11,8 @@ public class UserProperties {
 	private String api;
 	private String email;
 	private String pwd;
-	private String org;
-	private String space;
+	private String org = "emulated-org";
+	private String space = "emulated-space";
 	private String runCf;
 
 	public ExecuteWatchdog getWatchdog() {
@@ -34,19 +34,19 @@ public class UserProperties {
 	public String getApi() {
 		return api;
 	}
-	
+
 	public void setApi(String api) {
 		this.api = api;
 	}
-	
+
 	public String getPwd() {
 		return pwd;
 	}
-	
+
 	public void setPwd(String pwd) {
 		this.pwd = pwd;
 	}
-	
+
 	public String getEmail() {
 		return email;
 	}
@@ -70,11 +70,11 @@ public class UserProperties {
 	public void setSpace(String space) {
 		this.space = space;
 	}
-	
+
 	public String getRunCf() {
 		return runCf;
 	}
-	
+
 	public void setRunCf(String runCf) {
 		this.runCf = runCf;
 	}
