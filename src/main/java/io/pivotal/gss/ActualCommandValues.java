@@ -7,6 +7,9 @@ public class ActualCommandValues {
 	public static final String ORG = "gss-apj";
 	public static final String SPACE = "fwang";
 	public static final String APPNAME = "thisisappname";
+	public static final String SPACEINPUT = "Select a space([\\s\\S]*)";
+	public static final String SPACEOUTPUTPREIX = "Select a space (or press enter to skip):\n1. ";
+	public static final String SPACEOUTPUTPOST = "\n";
 
 	private ActualCommandValues() {
 	}
@@ -35,7 +38,9 @@ public class ActualCommandValues {
 		return string.replaceAll(EMAIL, p.getEmail())
 				.replaceAll(ORG, p.getOrg()).replaceAll(PASSWORD, p.getPwd())
 				.replaceAll(p.getRunCf(), "cf").replaceAll(SPACE, p.getSpace())
-				.replaceAll(APPNAME, p.getAppName()) ;
+				//.replaceAll(APPNAME, p.getAppName()).replaceAll("Select a space[\\s\\S]*\\d.*\n*", "Select a space (or press enter to skip):\n" + "1."+ p.getSpace() + SPACEOUTPUTPOST);
+				.replaceAll("\\d.*\n*","")
+				.replaceAll(APPNAME, p.getAppName()).replaceAll("Select a space([\\s\\S]*)", "Select a space (or press enter to skip):\n"+ "1."+ p.getSpace() + SPACEOUTPUTPOST);
 	}
 
 }

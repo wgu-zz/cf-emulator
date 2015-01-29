@@ -141,7 +141,16 @@ public class HomeController {
 		executor.execute(cmdLine, resultHandler);
 
 		System.out.println("non blocking");
-
+		
+		String tString = "Select a space (or press enter to skip):" + "\n" + "\n" +
+				 		 "1. development" + "\n" +
+				 		 "2. test" + "\n" +
+				 		 "3. support";
+		//System.out.println(tString.replaceAll("Select a space (or press enter to skip):", "Select a space (or press enter to skip):\n1.emulate\n"));
+		//System.out.println(tString.replaceAll("Select a space([\\s\\S]*)", "Select a space (or pdress enter to skip):\n1.emulate\n"));
+		//System.out.println(tString.replaceAll("Select a space[\\s\\S]*\\d.*\n*", "")+ "1. emulator");
+		System.out.println(tString.replaceAll("Select a space[\\s\\S]*", "")+ "1. emulator");
+		
 		Runnable r = new Runnable() {
 
 			@Override
