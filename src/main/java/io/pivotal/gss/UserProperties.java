@@ -14,7 +14,25 @@ public class UserProperties {
 	private String org = "emulated-org";
 	private String space = "emulated-space";
 	private String runCf;
+	private String cfBinary;
 	private String appName;
+	private String currentCommandInput;
+
+	public String getCurrentCommandInput() {
+		return currentCommandInput;
+	}
+
+	public void setCurrentCommandInput(String currentCommandInput) {
+		this.currentCommandInput = currentCommandInput;
+	}
+
+	public String getCfBinary() {
+		return cfBinary;
+	}
+
+	public void setCfBinary(String cfBinary) {
+		this.cfBinary = cfBinary;
+	}
 
 	public ExecuteWatchdog getWatchdog() {
 		return watchdog;
@@ -79,7 +97,7 @@ public class UserProperties {
 	public void setRunCf(String runCf) {
 		this.runCf = runCf;
 	}
-	
+
 	public String getAppName() {
 		return appName;
 	}

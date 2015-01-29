@@ -27,12 +27,14 @@ public class InputParser {
 						p.setOrg("emulated-org");
 					}
 				} else if (argument.endsWith("space")) {
-					if (!"6".equals(userInput)) {
+					if (!"1".equals(userInput)) {
 						userInput = "999";
 					} else {
 						p.setSpace("emulated-space");
+						userInput = "6";
 					}
 				} else {
+					p.getWatchdog().destroyProcess();
 					throw new RuntimeException("Unhandled argument: "
 							+ argument);
 				}
@@ -42,14 +44,15 @@ public class InputParser {
 		}
 		// TODO non-interactive commands
 		if (input.contains("cf push")) {
-			String[] map = input.split(" ");			
-			if(map.length != 3) {
+			String[] map = input.split(" ");
+			if (map.length != 3) {
 				return input;
-			}
-			else {
+			} else {
 				String pushCmdAppName = map[2].trim();
-				p.setAppName(pushCmdAppName);				
-				return "cf push " + ActualCommandValues.replaceAllWithActual(pushCmdAppName, p) + "\n";
+				p.setAppName(pushCmdAppName);
+				return "cf push "
+						+ ActualCommandValues.replaceAllWithActual(
+								pushCmdAppName, p) + "\n";
 			}
 		}
 		return input;

@@ -141,8 +141,7 @@ public class WebSocketStreamPumper<D> implements Runnable {
 				// resString.replaceAll(userProperties.getRunCf(),"cf");
 				// user response string replace
 				outputSender.convertAndSend(ActualCommandValues
-						.replaceAllWithUser(resString, userProperties)
-						.replaceAll("stty: stdin isn't a terminal\n", ""));
+						.replaceAllWithUser(resString, userProperties));
 			}
 		} catch (final Exception e) {
 			// nothing to do - happens quite often with watchdog

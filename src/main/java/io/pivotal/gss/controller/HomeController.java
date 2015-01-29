@@ -38,6 +38,7 @@ public class HomeController {
 
 	private static String contextRoot;
 	private static String runCf;
+	private static String cfBinary;
 	private static Map<String, UserProperties> userSessions = new HashMap<String, UserProperties>();
 
 	@Autowired
@@ -49,7 +50,7 @@ public class HomeController {
 	@PostConstruct
 	public void init() {
 		contextRoot = servletContext.getRealPath(File.separator);
-		String cfBinary = SystemUtils.IS_OS_LINUX ? "cf-linux64" : "cf-mac";
+		cfBinary = SystemUtils.IS_OS_LINUX ? "cf-linux64" : "cf-mac";
 		runCf = contextRoot + File.separator + "resources" + File.separator
 				+ "cf" + File.separator + cfBinary;
 	}
@@ -91,11 +92,14 @@ public class HomeController {
 		env.put("CF_HOME", cfHome);
 
 		CommandLine cmdLine = new CommandLine(runCf);
-		// ////////////////////////		
+		// ////////////////////////
 		userProperties.setRunCf(runCf);
-		String[] commandPara = InputParser.parse(command, userProperties).split(" ");
+		userProperties.setCfBinary(cfBinary);
+		userProperties.setCurrentCommandInput(null);
+		String[] commandPara = InputParser.parse(command, userProperties)
+				.split(" ");
 		cmdLine.addArguments(Arrays.copyOfRange(commandPara, 1,
-				commandPara.length));		
+				commandPara.length));
 		// ////////////////////////
 		DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
 		Executor executor = new DefaultExecutor();
@@ -141,16 +145,19 @@ public class HomeController {
 		executor.execute(cmdLine, resultHandler);
 
 		System.out.println("non blocking");
-		
-		String tString = "Select a space (or press enter to skip):" + "\n" + "\n" +
-				 		 "1. development" + "\n" +
-				 		 "2. test" + "\n" +
-				 		 "3. support";
-		//System.out.println(tString.replaceAll("Select a space (or press enter to skip):", "Select a space (or press enter to skip):\n1.emulate\n"));
-		//System.out.println(tString.replaceAll("Select a space([\\s\\S]*)", "Select a space (or pdress enter to skip):\n1.emulate\n"));
-		//System.out.println(tString.replaceAll("Select a space[\\s\\S]*\\d.*\n*", "")+ "1. emulator");
-		System.out.println(tString.replaceAll("Select a space[\\s\\S]*", "")+ "1. emulator");
-		
+
+		String tString = "Select a space (or press enter to skip):" + "\n"
+				+ "\n" + "1. development" + "\n" + "2. test" + "\n"
+				+ "3. support";
+		// System.out.println(tString.replaceAll("Select a space (or press enter to skip):",
+		// "Select a space (or press enter to skip):\n1.emulate\n"));
+		// System.out.println(tString.replaceAll("Select a space([\\s\\S]*)",
+		// "Select a space (or pdress enter to skip):\n1.emulate\n"));
+		// System.out.println(tString.replaceAll("Select a space[\\s\\S]*\\d.*\n*",
+		// "")+ "1. emulator");
+		System.out.println(tString.replaceAll("Select a space[\\s\\S]*", "")
+				+ "1. emulator");
+
 		Runnable r = new Runnable() {
 
 			@Override
