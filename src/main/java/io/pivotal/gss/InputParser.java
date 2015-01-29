@@ -41,6 +41,17 @@ public class InputParser {
 					+ "\n";
 		}
 		// TODO non-interactive commands
-		return null;
+		if (input.contains("cf push")) {
+			String[] map = input.split(" ");			
+			if(map.length != 3) {
+				return input;
+			}
+			else {
+				String pushCmdAppName = map[2].trim();
+				p.setAppName(pushCmdAppName);				
+				return "cf push " + ActualCommandValues.replaceAllWithActual(pushCmdAppName, p) + "\n";
+			}
+		}
+		return input;
 	}
 }

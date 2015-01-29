@@ -91,16 +91,11 @@ public class HomeController {
 		env.put("CF_HOME", cfHome);
 
 		CommandLine cmdLine = new CommandLine(runCf);
-		// ////////////////////////
-		// store para and add argument
+		// ////////////////////////		
 		userProperties.setRunCf(runCf);
-		String[] commandPara = command.split(" ");
-		// backTest bt = new backTest();
-		// String[] acArgs = bt
-		// .parseInputUserproperty(userProperties, commandPara);
+		String[] commandPara = InputParser.parse(command, userProperties).split(" ");
 		cmdLine.addArguments(Arrays.copyOfRange(commandPara, 1,
-				commandPara.length));
-		// store para and add argument
+				commandPara.length));		
 		// ////////////////////////
 		DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
 		Executor executor = new DefaultExecutor();

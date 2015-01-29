@@ -14,6 +14,7 @@ public class UserProperties {
 	private String org = "emulated-org";
 	private String space = "emulated-space";
 	private String runCf;
+	private String appName;
 
 	public ExecuteWatchdog getWatchdog() {
 		return watchdog;
@@ -77,6 +78,14 @@ public class UserProperties {
 
 	public void setRunCf(String runCf) {
 		this.runCf = runCf;
+	}
+	
+	public String getAppName() {
+		return appName;
+	}
+
+	public void setAppName(String appName) {
+		this.appName = appName;
 	}
 
 }

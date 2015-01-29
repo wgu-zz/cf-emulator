@@ -6,6 +6,7 @@ public class ActualCommandValues {
 	public static final String PASSWORD = "wang123456";
 	public static final String ORG = "gss-apj";
 	public static final String SPACE = "fwang";
+	public static final String APPNAME = "thisisappname";
 
 	private ActualCommandValues() {
 	}
@@ -24,13 +25,17 @@ public class ActualCommandValues {
 		if (p.getSpace() != null && p.getSpace().length() > 0) {
 			result = result.replaceAll(p.getSpace(), SPACE);
 		}
+		if (p.getAppName() != null && p.getAppName().length() > 0) {
+			result = result.replaceAll(p.getAppName() , APPNAME);
+		}
 		return result;
 	}
 
 	public static String replaceAllWithUser(String string, UserProperties p) {
 		return string.replaceAll(EMAIL, p.getEmail())
 				.replaceAll(ORG, p.getOrg()).replaceAll(PASSWORD, p.getPwd())
-				.replaceAll(p.getRunCf(), "cf").replaceAll(SPACE, p.getSpace());
+				.replaceAll(p.getRunCf(), "cf").replaceAll(SPACE, p.getSpace())
+				.replaceAll(APPNAME, p.getAppName()) ;
 	}
 
 }
