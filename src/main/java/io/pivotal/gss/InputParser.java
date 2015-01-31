@@ -1,5 +1,7 @@
 package io.pivotal.gss;
 
+import io.pivotal.gss.controller.HomeController;
+
 public class InputParser {
 
 	private InputParser() {
@@ -43,17 +45,15 @@ public class InputParser {
 					+ "\n";
 		}
 		// TODO non-interactive commands
-		if (input.contains("cf push")) {
+		if (input.startsWith("cf push")) {
 			String[] map = input.split(" ");
-			if (map.length != 3) {
+			if (map.length < 3) {
 				return input;
-			} else {
-				String pushCmdAppName = map[2].trim();
-				p.setAppName(pushCmdAppName);
-				return "cf push "
-						+ ActualCommandValues.replaceAllWithActual(
-								pushCmdAppName, p) + "\n";
 			}
+			String pushCmdAppName = map[2].trim();
+			p.setAppName(pushCmdAppName);
+			return "cf push " + pushCmdAppName + " -p "
+					+ HomeController.contextRoot + "/resources/sample.war";
 		}
 		return input;
 	}

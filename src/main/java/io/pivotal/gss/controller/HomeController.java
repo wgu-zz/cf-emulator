@@ -36,7 +36,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class HomeController {
 
-	private static String contextRoot;
+	public static String contextRoot;
+
 	private static String runCf;
 	private static String cfBinary;
 	private static Map<String, UserProperties> userSessions = new HashMap<String, UserProperties>();

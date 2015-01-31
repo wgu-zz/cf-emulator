@@ -156,6 +156,7 @@ public class WebSocketStreamPumper<D> implements Runnable {
 			}
 			synchronized (this) {
 				finished = true;
+				outputSender.convertAndSend("done!");
 				notifyAll();
 			}
 		}

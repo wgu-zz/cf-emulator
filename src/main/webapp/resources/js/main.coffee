@@ -9,33 +9,33 @@ html: """
       <p>cf CLI v6 installs with a simple point-and-click, and you no longer need to install Ruby on your system first 
       (or ever). You can use new binaries or new native installers. See 
       <a href="http://docs.run.pivotal.io/devguide/installcf/install-go-cli.html">Install cf CLI Version 6</a>. 
-      </br></br> For this emulator, simple type cf commands without any installation! Now try <code>cf help</code>.</p>
+      </br></br> For this emulator, simply type cf commands without any installation! Now try <code>cf help</code>.
+      </br></br>Please note this command line emulator includes subset of the cf command set. Some commands may not work.
+      </p>
       """
 })
 
 q.push ({
 html: """
-      <h3>Login</h3>
-      <p>The <code>login</code> command in the cf CLI v6 has expanded functionality. In addition to your username and 
+      <h3>Login and Play!</h3>
+      <p>In addition to your username and 
       password, you can provide a target API endpoint, organization, and space. If not specified on the command line, 
       the cf CLI prompts for:</br></br><li><strong>API endpoint</strong>: This is <code>api.run.pivotal.io</code>
 	  <li><strong>Username</strong>: Your username.</li>
 	  <li><strong>Password</strong>: Your password.</li>
 	  <li><strong>Org</strong>: The organization where you want to deploy your application.</li>
 	  <li><strong>Space</strong>: The space in the organization where you want to deploy your application.</li></p>
-	  <p>If you have only one organization and one space, you can omit them because <code>cf login</code> targets them automatically. Usage:</p>
+	  <p>If you have only one organization and one space, you can omit them because <code>cf login</code> targets them automatically. 
+	  </br></br>Usage:</p>
 	  <pre id="pre1" class="terminal1">
 	  cf login [-a API_URL] [-u USERNAME] [-p PASSWORD] [-o ORG] [-s SPACE]
-	  </pre>
-	  <p>Alternatively, you can write a script to log in and set your target, using the non-interactive <code>cf api</code>, <code>cf auth</code>, and <code>cf target</code> commands.</p>
-	  <p>Upon successful login, the cf CLI v6 saves a <code>config.json</code> file containing your API endpoint, organization, space values, and access token. If you change these settings, the <code>config.json</code> file is updated accordingly.</p>
-	  <p>By default, <code>config.json</code> is located in your <code>~/.cf</code> directory. The new <code>CF_HOME</code> environment variable allows you to locate the <code>config.json</code> file wherever you like.</p>
+	  </pre></p>
 	  """
 })
 
 q.push ({
 html: """
-      <h3>Target</h3>
+      <h3>Get Target Info</h3>
       <p>The <code>target</code> command in the cf CLI v6 is used to set or view the targeted org or space:</br></br>
 	  <li><strong>Usage</strong>:</li></p>
 	  <pre id="pre1" class="terminal1">
@@ -46,8 +46,9 @@ html: """
 
 q.push ({
 html: """
-      <h3>Push</h3>
-	 <p>In cf CLI v6, <code>push</code> is simpler to use and faster.</p>
+      <h3>Get Something Real!</h3>
+	 <p>The <code>push</code> command is used to deploy your app to CF platforms.</br>Try use the command to deploy and 
+	 start your own web application now. Don't worry if you have no current project. The emulator has prepared a simple sample.</p>
 	 <ul>
 	 <li><code>APP</code>, the name of the application to push, is the only required argument, and the only argument that has no flag. Even <code>APP</code> can be omitted when you provide the application name in a manifest.</li>
 	 <li>Many command line options are now one character long. For example, <code>-n</code> is now the flag for hostname or subdomain, replacing <code>--host</code>.</li>
@@ -70,7 +71,14 @@ html: """
 	 </pre>
 	 <p>Optional arguments include:</p>
 	 <ul>
-	 <li><code>-b</code> &mdash; Custom buildpack URL, for example, <a href="https://github.com/heroku/heroku-buildpack-play.git">https://github.com/heroku/heroku-buildpack-play.git</a> or <a href="https://github.com/heroku/heroku-buildpack-play.git#stable">https://github.com/heroku/heroku-buildpack-play.git#stable</a> to select <code>stable</code> branch</li>
+	 <li><code>-b</code> &mdash; Custom buildpack URL, for example, <a href="https://github.com/heroku/heroku-buildpack-play.git">https:// github.com/heroku/heroku-buildpack-play.git</a>
+																																		// or
+																																		// <a
+																																		// href="https://github.com/heroku/heroku-buildpack-play.git#stable">https://github.com/heroku/heroku-buildpack-play.git#stable</a>
+																																		// to
+																																		// select
+																																		// <code>stable</code>
+																																		// branch</li>
 	 <li><code>-c</code> &mdash; Start command for the application.</li>
 	 <li><code>-d</code> &mdash; Domain, for example, example.com.</li>
 	 <li><code>-f</code> &mdash; replaces <code>--manifest</code></li>
@@ -91,8 +99,9 @@ html: """
 
 q.push ({
 html: """
-      <h3>Apps</h3>
-      <p>The <code>apps</code> command in the cf CLI v6 is used to list all apps in the target space:</br></br>
+      <h3>Awesome!</h3>
+      <p>Now that you deployed your application to CloudFoundry, use the apps to check the information and status of the
+      apps.</br></br>The <code>apps</code> command in the cf CLI v6 is used to list all apps in the target space:</br></br>
 	  <li><strong>Usage</strong>:</li></p>
 	  <pre id="pre1" class="terminal1">cf apps
 	  </pre>
@@ -324,12 +333,15 @@ $('#results').hide()
 String.prototype.endsWith = (suffix) ->
   this.indexOf(suffix, length - suffix.length) != -1
 
+mark_index = 0
 socket = new SockJS '/socket:4443'
 @stompClient = Stomp.over socket
 stompClient.connect {}, (frame) ->
   stompClient.subscribe '/broker/out', (output) ->
     message = JSON.parse output.body
-    if message.endsWith "> "
+    if message == "done!"
+      next mark_index++
+    else if message.endsWith "> "
       this.webterm.insert message
     else
       this.webterm.echo message
