@@ -132,14 +132,6 @@ public class WebSocketStreamPumper<D> implements Runnable {
 
 				// user response string replace
 				String resString = new String(Arrays.copyOf(buf, length));
-				// resString.replaceAll("https://api.run.pivotal.io",
-				// userProperties.getApi());
-				// resString.replaceAll("fwang@pivotal.io",
-				// userProperties.getEmail());
-				// resString.replaceAll("gss-apj", userProperties.getOrg());
-				// resString.replaceAll("fwang", userProperties.getSpace());
-				// resString.replaceAll(userProperties.getRunCf(),"cf");
-				// user response string replace
 				outputSender.convertAndSend(ActualCommandValues
 						.replaceAllWithUser(resString, userProperties));
 			}

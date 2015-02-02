@@ -38,31 +38,23 @@ public class ActualCommandValues {
 		} else if (string.contains("(API version:")) {
 			p.setCurrentCommandInput("result");
 		}
-		String result = string.replaceAll(EMAIL, p.getEmail())
-				.replaceAll(ORG, p.getOrg()).replaceAll(PASSWORD, p.getPwd())
+		String result = string
+				.replaceAll(EMAIL, p.getEmail())
+				.replaceAll(ORG, p.getOrg())
+				.replaceAll(PASSWORD, p.getPwd())
 				.replaceAll(p.getRunCf(), "cf")
 				.replaceAll(p.getCfBinary(), "cf")
 				.replaceAll(SPACE, p.getSpace())
-				.replaceAll("stty: stdin isn't a terminal\n", "");
+				.replaceAll("\r", "\n")
+				.replaceAll("stty: stdin isn't a terminal\n", "")
+				.replaceAll(
+						"stty: standard input: Inappropriate ioctl for device\n",
+						"");
 		if ("space".equals(p.getCurrentCommandInput())) {
 			result = result.replaceAll("\\d.*\n*", "").replaceAll("Space> ",
 					"1. " + p.getSpace() + "\n\nSpace> ");
 		}
 		return result;
-		// return string
-		// .replaceAll(EMAIL, p.getEmail())
-		// .replaceAll(ORG, p.getOrg())
-		// .replaceAll(PASSWORD, p.getPwd())
-		// .replaceAll(p.getRunCf(), "cf")
-		// .replaceAll(p.getCfBinary(), "cf")
-		// .replaceAll(SPACE, p.getSpace())
-		// .replaceAll(APPNAME, p.getAppName())
-		// // .replaceAll("\\d.*\n*", "")
-		// .replaceAll(
-		// "Select a space([\\s\\S]*)",
-		// "Select a space (or press enter to skip):\n" + "1. "
-		// + p.getSpace() + SPACEOUTPUTPOST)
-		// .replaceAll("stty: stdin isn't a terminal\n", "");
 	}
 
 }

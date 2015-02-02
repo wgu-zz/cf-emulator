@@ -35,10 +35,6 @@ public class InputParser {
 						p.setSpace("emulated-space");
 						userInput = "6";
 					}
-				} else {
-					p.getWatchdog().destroyProcess();
-					throw new RuntimeException("Unhandled argument: "
-							+ argument);
 				}
 			}
 			return ActualCommandValues.replaceAllWithActual(userInput, p)
