@@ -331,16 +331,21 @@ else
 $('#results').hide()
 
 String.prototype.endsWith = (suffix) ->
-  this.indexOf(suffix, length - suffix.length) != -1
+  this.indexOf(suffix, this.length - suffix.length) != -1
 
-mark_index = 0
+mark_index = 1
+done = 0
 socket = new SockJS '/socket:4443'
 @stompClient = Stomp.over socket
 stompClient.connect {}, (frame) ->
   stompClient.subscribe '/broker/out', (output) ->
     message = JSON.parse output.body
     if message == "done!"
-      next mark_index++
+      if done != 2
+        done++
+        if done == 2
+          done = 0
+          next mark_index++
     else if message.endsWith "> "
       this.webterm.insert message
     else

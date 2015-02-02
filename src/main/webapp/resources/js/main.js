@@ -5,7 +5,7 @@
  */
 
 (function() {
-  var EVENT_TYPES, buildfunction, current_question, currentquestion, drawStatusMarker, err, f, logEvent, mark_index, next, progressIndicator, q, question, questionNumber, questions, results, socket, statusMarker, _i, _len;
+  var EVENT_TYPES, buildfunction, current_question, currentquestion, done, drawStatusMarker, err, f, logEvent, mark_index, next, progressIndicator, q, question, questionNumber, questions, results, socket, statusMarker, _i, _len;
 
   q = [];
 
@@ -256,10 +256,12 @@
   $('#results').hide();
 
   String.prototype.endsWith = function(suffix) {
-    return this.indexOf(suffix, length - suffix.length) !== -1;
+    return this.indexOf(suffix, this.length - suffix.length) !== -1;
   };
 
-  mark_index = 0;
+  mark_index = 1;
+
+  done = 0;
 
   socket = new SockJS('/socket:4443');
 
@@ -270,7 +272,13 @@
       var message;
       message = JSON.parse(output.body);
       if (message === "done!") {
-        return next(mark_index++);
+        if (done !== 2) {
+          done++;
+          if (done === 2) {
+            done = 0;
+            return next(mark_index++);
+          }
+        }
       } else if (message.endsWith("> ")) {
         return this.webterm.insert(message);
       } else {
